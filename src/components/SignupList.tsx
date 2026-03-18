@@ -8,7 +8,7 @@ type Signup = {
   _id: Id<"signups">;
   eveningId: Id<"evenings">;
   name: string;
-  role: "koken" | "boodschappen";
+  role?: "koken" | "boodschappen";
   dish?: string;
   portions?: number;
   phone?: string;

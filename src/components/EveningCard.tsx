@@ -11,14 +11,14 @@ type Evening = {
   topic: string;
   status: "upcoming" | "past" | "cancelled";
   isWeekend: boolean;
-  targetPortions: number;
+  targetPortions?: number;
 };
 
 type Signup = {
   _id: Id<"signups">;
   eveningId: Id<"evenings">;
   name: string;
-  role: "koken" | "boodschappen";
+  role?: "koken" | "boodschappen";
   dish?: string;
   portions?: number;
   phone?: string;
@@ -58,13 +58,14 @@ export function EveningCard({
   const cookers = signups.filter((s) => s.role === "koken");
   const shoppers = signups.filter((s) => s.role === "boodschappen");
   const totalPortions = cookers.reduce((sum, s) => sum + (s.portions || 0), 0);
-  const portionPercentage = Math.min(100, Math.round((totalPortions / evening.targetPortions) * 100));
+  const target = evening.targetPortions ?? 60;
+  const portionPercentage = Math.min(100, Math.round((totalPortions / target) * 100));
   const days = daysUntil(evening.date);
 
   const urgencyColor =
-    days <= 3 && totalPortions < evening.targetPortions
+    days <= 3 && totalPortions < target
       ? "border-error/40 bg-error-bg/30"
-      : days <= 7 && totalPortions < evening.targetPortions
+      : days <= 7 && totalPortions < target
         ? "border-warning/40 bg-warning-bg/30"
         : "border-border bg-surface";
 
@@ -113,7 +114,7 @@ export function EveningCard({
             <div className="mt-2.5">
               <div className="flex items-center justify-between text-xs mb-1">
                 <span className="text-muted">
-                  {totalPortions}/{evening.targetPortions} porties
+                  {totalPortions}/{target} porties
                 </span>
                 <span className="flex items-center gap-2 text-muted">
                   <span>🧑‍🍳 {cookers.length}</span>
