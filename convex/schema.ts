@@ -23,4 +23,13 @@ export default defineSchema({
     notes: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_evening", ["eveningId"]),
+  settings: defineTable({
+    key: v.string(),
+    allergies: v.array(v.string()),
+  }).index("by_key", ["key"]),
+  dishSuggestions: defineTable({
+    eveningId: v.id("evenings"),
+    dish: v.string(),
+    suggestedBy: v.optional(v.string()),
+  }).index("by_evening", ["eveningId"]),
 });
