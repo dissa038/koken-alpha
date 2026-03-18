@@ -3,7 +3,10 @@
 import { useState, useEffect } from "react";
 import { Dashboard } from "@/components/Dashboard";
 
-const CORRECT_PASSWORD = "koken voor alfa";
+const PASSWORDS = {
+  admin: "admin123",
+  user: "alphazwolle",
+};
 
 export default function Home() {
   const [password, setPassword] = useState("");
@@ -21,7 +24,8 @@ export default function Home() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password.toLowerCase().trim() === CORRECT_PASSWORD) {
+    const input = password.toLowerCase().trim();
+    if (input === PASSWORDS.admin || input === PASSWORDS.user) {
       setAuthenticated(true);
       sessionStorage.setItem("koken-auth", "true");
       setError(false);
