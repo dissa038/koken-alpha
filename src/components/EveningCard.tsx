@@ -55,23 +55,11 @@ export function EveningCard({
   const [showModal, setShowModal] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
-  const cookers = signups.filter((s) => s.role === "koken");
-  const shoppers = signups.filter((s) => s.role === "boodschappen");
-  const totalPortions = cookers.reduce((sum, s) => sum + (s.portions || 0), 0);
-  const target = evening.targetPortions ?? 60;
-  const portionPercentage = Math.min(100, Math.round((totalPortions / target) * 100));
   const days = daysUntil(evening.date);
-
-  const urgencyColor =
-    days <= 3 && totalPortions < target
-      ? "border-error/40 bg-error-bg/30"
-      : days <= 7 && totalPortions < target
-        ? "border-warning/40 bg-warning-bg/30"
-        : "border-border bg-surface";
 
   return (
     <>
-      <div className={`rounded-xl border ${urgencyColor} overflow-hidden transition-all`}>
+      <div className="rounded-xl border border-border bg-surface overflow-hidden transition-all">
         {/* Card header */}
         <button
           onClick={() => setExpanded(!expanded)}
@@ -95,43 +83,23 @@ export function EveningCard({
                 <p className="text-sm font-semibold text-foreground truncate">{evening.topic}</p>
                 <p className="text-xs text-muted mt-0.5">{formatDate(evening.date)}</p>
               </div>
-              {!readonly && (
-                <span
-                  className={`flex-shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
-                    days <= 3
-                      ? "bg-error-bg text-error"
-                      : days <= 7
-                        ? "bg-warning-bg text-warning"
-                        : "bg-accent-light text-muted"
-                  }`}
-                >
-                  {days === 0 ? "Vandaag" : days === 1 ? "Morgen" : `${days}d`}
-                </span>
-              )}
-            </div>
-
-            {/* Progress bar */}
-            <div className="mt-2.5">
-              <div className="flex items-center justify-between text-xs mb-1">
-                <span className="text-muted">
-                  {totalPortions}/{target} porties
-                </span>
-                <span className="flex items-center gap-2 text-muted">
-                  <span>🧑‍🍳 {cookers.length}</span>
-                  <span>🛒 {shoppers.length}</span>
-                </span>
-              </div>
-              <div className="h-2 w-full rounded-full bg-accent-light overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all duration-500 ${
-                    portionPercentage >= 80
-                      ? "bg-success"
-                      : portionPercentage >= 40
-                        ? "bg-warning"
-                        : "bg-error"
-                  }`}
-                  style={{ width: `${portionPercentage}%` }}
-                />
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {signups.length > 0 && (
+                  <span className="text-xs text-muted">{signups.length} aangemeld</span>
+                )}
+                {!readonly && (
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                      days <= 3
+                        ? "bg-error-bg text-error"
+                        : days <= 7
+                          ? "bg-warning-bg text-warning"
+                          : "bg-accent-light text-muted"
+                    }`}
+                  >
+                    {days === 0 ? "Vandaag" : days === 1 ? "Morgen" : `${days}d`}
+                  </span>
+                )}
               </div>
             </div>
           </div>
