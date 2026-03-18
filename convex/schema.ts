@@ -11,12 +11,12 @@ export default defineSchema({
       v.literal("cancelled")
     ),
     isWeekend: v.boolean(),
-    targetPortions: v.number(), // How many people need to be fed (40-60)
+    targetPortions: v.optional(v.number()), // How many people need to be fed (~60)
   }),
   signups: defineTable({
     eveningId: v.id("evenings"),
     name: v.string(),
-    role: v.union(v.literal("koken"), v.literal("boodschappen")),
+    role: v.optional(v.union(v.literal("koken"), v.literal("boodschappen"))),
     dish: v.optional(v.string()), // What dish (only for koken)
     portions: v.optional(v.number()), // How many portions (only for koken)
     phone: v.optional(v.string()),

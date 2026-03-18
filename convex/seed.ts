@@ -37,7 +37,7 @@ export const seedEvenings = mutation({
     for (const evening of ALPHA_EVENINGS) {
       await ctx.db.insert("evenings", {
         ...evening,
-        targetPortions: 50, // Default target: 50 porties
+        targetPortions: 60, // Default target: 60 porties
       });
     }
 

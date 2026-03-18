@@ -88,7 +88,7 @@ export function Dashboard() {
             <span className="inline-flex items-center gap-1 rounded-md bg-warning-bg px-1.5 py-0.5 text-xs font-medium text-warning">🧑‍🍳 Koker</span>{" "}
             of{" "}
             <span className="inline-flex items-center gap-1 rounded-md bg-success-bg px-1.5 py-0.5 text-xs font-medium text-success">🛒 Boodschapper</span>.{" "}
-            Als koker geef je aan wat je maakt en voor hoeveel personen.
+            Als koker geef je aan wat je maakt en voor hoeveel personen. We koken voor ongeveer <strong>60 personen</strong> per avond.
           </p>
         </div>
 
