@@ -1,9 +1,22 @@
 "use client";
 
-import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
+
+const TEAM_MEMBERS = [
+  "Noah",
+  "Hanna",
+  "Joëlle",
+  "Luuk",
+  "Xanne",
+  "Esmée",
+  "Esther",
+  "Jelcher",
+  "Mattias",
+  "Melissa",
+  "Petrick",
+];
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr + "T00:00:00");
@@ -27,20 +40,13 @@ function CorveeEvening({
   corveeNames: string[];
 }) {
   const updateCorvee = useMutation(api.evenings.updateCorvee);
-  const [newName, setNewName] = useState("");
 
-  const addName = () => {
-    const name = newName.trim();
-    if (!name) return;
-    updateCorvee({ eveningId, corveeNames: [...corveeNames, name] });
-    setNewName("");
-  };
-
-  const removeName = (index: number) => {
-    updateCorvee({
-      eveningId,
-      corveeNames: corveeNames.filter((_, i) => i !== index),
-    });
+  const toggleName = (name: string) => {
+    const isAssigned = corveeNames.includes(name);
+    const updated = isAssigned
+      ? corveeNames.filter((n) => n !== name)
+      : [...corveeNames, name];
+    updateCorvee({ eveningId, corveeNames: updated });
   };
 
   return (
@@ -56,51 +62,35 @@ function CorveeEvening({
             ]}
           </span>
         </div>
-        <div>
-          <p className="text-sm font-semibold text-foreground">{topic}</p>
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-foreground truncate">{topic}</p>
           <p className="text-xs text-muted">{formatDate(date)}</p>
         </div>
+        {corveeNames.length > 0 && (
+          <span className="ml-auto text-xs font-medium text-primary bg-primary/10 rounded-full px-2 py-0.5">
+            {corveeNames.length}
+          </span>
+        )}
       </div>
 
-      {/* Current corvee names */}
-      {corveeNames.length > 0 && (
-        <div className="space-y-1.5 mb-3">
-          {corveeNames.map((name, i) => (
-            <div
-              key={i}
-              className="flex items-center justify-between rounded-lg bg-accent-light/50 px-3 py-2"
+      {/* Toggle chips */}
+      <div className="flex flex-wrap gap-2">
+        {TEAM_MEMBERS.map((name) => {
+          const isOn = corveeNames.includes(name);
+          return (
+            <button
+              key={name}
+              onClick={() => toggleName(name)}
+              className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all active:scale-95 ${
+                isOn
+                  ? "bg-primary text-surface shadow-sm"
+                  : "bg-accent-light text-muted hover:text-foreground"
+              }`}
             >
-              <span className="text-sm text-foreground">{name}</span>
-              <button
-                onClick={() => removeName(i)}
-                className="ml-2 rounded-md p-1 text-muted hover:bg-error-bg hover:text-error transition-colors"
-              >
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Add name */}
-      <div className="flex gap-2">
-        <input
-          type="text"
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && addName()}
-          placeholder="Naam toevoegen..."
-          className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-        />
-        <button
-          onClick={addName}
-          disabled={!newName.trim()}
-          className="rounded-lg bg-primary px-3 py-2 text-sm font-medium text-surface transition-all hover:bg-primary-light active:scale-[0.98] disabled:opacity-40"
-        >
-          +
-        </button>
+              {name}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -135,7 +125,7 @@ export function CorveePage({ onLogout }: { onLogout: () => void }) {
       <main className="mx-auto max-w-2xl px-4 pt-6 pb-8">
         <div className="mb-6 rounded-xl bg-surface border border-border p-4">
           <p className="text-sm text-foreground">
-            Wijs per avond de mensen aan die <strong>corvee</strong> hebben (opruimen/afwassen).
+            Tap op een naam om corvee aan/uit te zetten voor die avond.
           </p>
         </div>
 
