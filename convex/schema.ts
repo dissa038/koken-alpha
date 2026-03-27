@@ -12,6 +12,7 @@ export default defineSchema({
     ),
     isWeekend: v.boolean(),
     targetPortions: v.optional(v.number()), // How many people need to be fed (~60)
+    corveeNames: v.optional(v.array(v.string())), // Corvee duty names
   }),
   signups: defineTable({
     eveningId: v.id("evenings"),

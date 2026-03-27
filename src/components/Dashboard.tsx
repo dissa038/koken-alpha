@@ -28,7 +28,7 @@ type Signup = {
   createdAt: number;
 };
 
-export function Dashboard() {
+export function Dashboard({ onLogout }: { onLogout?: () => void }) {
   const evenings = useQuery(api.evenings.list);
   const allSignups = useQuery(api.signups.listAll);
   const allergies = useQuery(api.settings.getAllergies);
@@ -70,10 +70,10 @@ export function Dashboard() {
             </div>
           </div>
           <button
-            onClick={() => {
+            onClick={onLogout ?? (() => {
               sessionStorage.removeItem("koken-auth");
               window.location.reload();
-            }}
+            })}
             className="rounded-lg px-3 py-1.5 text-sm text-muted transition-colors hover:bg-accent-light hover:text-foreground"
           >
             Uitloggen

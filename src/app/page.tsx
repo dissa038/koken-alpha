@@ -2,22 +2,24 @@
 
 import { useState, useEffect } from "react";
 import { Dashboard } from "@/components/Dashboard";
+import { CorveePage } from "@/components/CorveePage";
 
-const PASSWORDS = {
-  admin: "admin123",
-  user: "alphazwolle",
+const PASSWORDS: Record<string, "dashboard" | "corvee"> = {
+  admin123: "dashboard",
+  alphazwolle: "dashboard",
+  corveerooster: "corvee",
 };
 
 export default function Home() {
   const [password, setPassword] = useState("");
-  const [authenticated, setAuthenticated] = useState(false);
+  const [view, setView] = useState<"login" | "dashboard" | "corvee">("login");
   const [error, setError] = useState(false);
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
     const saved = sessionStorage.getItem("koken-auth");
-    if (saved === "true") {
-      setAuthenticated(true);
+    if (saved === "dashboard" || saved === "corvee") {
+      setView(saved);
     }
     setChecking(false);
   }, []);
@@ -25,13 +27,20 @@ export default function Home() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const input = password.toLowerCase().trim();
-    if (input === PASSWORDS.admin || input === PASSWORDS.user) {
-      setAuthenticated(true);
-      sessionStorage.setItem("koken-auth", "true");
+    const target = PASSWORDS[input];
+    if (target) {
+      setView(target);
+      sessionStorage.setItem("koken-auth", target);
       setError(false);
     } else {
       setError(true);
     }
+  };
+
+  const handleLogout = () => {
+    setView("login");
+    setPassword("");
+    sessionStorage.removeItem("koken-auth");
   };
 
   if (checking) {
@@ -42,8 +51,12 @@ export default function Home() {
     );
   }
 
-  if (authenticated) {
-    return <Dashboard />;
+  if (view === "dashboard") {
+    return <Dashboard onLogout={handleLogout} />;
+  }
+
+  if (view === "corvee") {
+    return <CorveePage onLogout={handleLogout} />;
   }
 
   return (

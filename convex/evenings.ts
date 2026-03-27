@@ -1,4 +1,15 @@
-import { query } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
+import { v } from "convex/values";
+
+export const updateCorvee = mutation({
+  args: {
+    eveningId: v.id("evenings"),
+    corveeNames: v.array(v.string()),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.eveningId, { corveeNames: args.corveeNames });
+  },
+});
 
 export const list = query({
   args: {},
