@@ -5,10 +5,10 @@ import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
 const TEAM_MEMBERS = [
-  "Noah",
   "Hanna",
   "Joëlle",
   "Luuk",
+  "Luuk V",
   "Xanne",
   "Esmée",
   "Esther",
